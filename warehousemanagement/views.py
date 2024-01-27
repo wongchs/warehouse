@@ -3,10 +3,20 @@ from .models import Product, Category, Supplier
 from django.views import View
 from django import forms
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 # Create your views here.
 def home(request):
+    query = request.GET.get('search')
     products = Product.objects.all()
+    if query:
+        products = products.filter(
+            Q(name__icontains=query) | 
+            Q(sku__icontains=query) |
+            Q(location__icontains=query) |
+            Q(category__name__icontains=query) |
+            Q(supplier__name__icontains=query)
+        )
     return render(request, 'home.html', {'products': products})
 
 class ProductForm(forms.ModelForm):

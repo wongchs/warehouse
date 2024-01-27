@@ -1,5 +1,10 @@
 {% extends 'index.html' %} {% block content %}
 <h1>Product List</h1>
+<a href="{% url 'add_product' %}">Add Product</a>
+<form method="GET" action="">
+  <input type="text" name="search" placeholder="Search products" />
+  <input type="submit" value="Search" />
+</form>
 <table>
   <tr>
     <th>SKU</th>
@@ -12,7 +17,9 @@
   {% for product in products %}
   <tr>
     <td>{{ product.sku }}</td>
-    <td>{{ product.name }}</td>
+    <td>
+      <a href="{% url 'update_product' product.id %}">{{ product.name }}</a>
+    </td>
     <td>{{ product.location }}</td>
     <td>{{ product.quantity }}</td>
     <td>{{ product.category.name }}</td>
