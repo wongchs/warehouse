@@ -23,3 +23,26 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Inbound(models.Model):
+    reference = models.CharField(max_length=255, default="INBOUND")
+    date_received = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+    location = models.CharField(max_length=255, default="Storage S")
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.reference
+
+class Outbound(models.Model):
+    reference = models.CharField(max_length=255, default="OUTBOUND")
+    date_shipped = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    destination = models.CharField(max_length=255)
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.reference

@@ -1,0 +1,7 @@
+{% extends 'index.html' %} {% block content %}
+<h2>Outbound Product</h2>
+<form method="POST">
+  {% csrf_token %} {{ outbound_form.as_p }}
+  <button type="submit">Submit</button>
+</form>
+{% endblock %}
