@@ -1,30 +1,45 @@
 from django.shortcuts import render, redirect
-from .models import Product, Category, Supplier, Inbound, Outbound
+from .models import Product, Category, Supplier, Inbound, Outbound, UserProfile
 from django.views import View
 from django import forms
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required
 def home(request):
-    query = request.GET.get('search')
-    products = Product.objects.all()
-    if query:
-        products = products.filter(
-            Q(name__icontains=query) | 
-            Q(sku__icontains=query) |
-            Q(location__icontains=query) |
-            Q(category__name__icontains=query) |
-            Q(supplier__name__icontains=query)
-        )
-    return render(request, 'home.html', {'products': products})
+    user_profile = UserProfile.objects.get(user=request.user)
+    if user_profile.user_permissions():
+        query = request.GET.get('search')
+        products = Product.objects.all()
+        if query:
+            products = products.filter(
+                Q(name__icontains=query) | 
+                Q(sku__icontains=query) |
+                Q(location__icontains=query) |
+                Q(category__name__icontains=query) |
+                Q(supplier__name__icontains=query)
+            )
+        return render(request, 'home.html', {'products': products})
+    else:
+        outbounds = Outbound.objects.all()
+        inbounds = Inbound.objects.all()
+        return render(request, 'operator_home.html', {'outbounds': outbounds, 'inbounds': inbounds})
+
 
 class ProductForm(forms.ModelForm):
-    category = forms.ModelChoiceField(queryset=Category.objects.all())
-    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all())
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = Product
         fields = ['sku', 'name', 'location', 'quantity', 'category', 'supplier']
+        widgets = {
+            'sku': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter SKU'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter product name'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter location'}),
+            'quantity': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter quantity'}),
+        }
 
 class AddProductView(View):
     def get(self, request):

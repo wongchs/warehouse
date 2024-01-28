@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Category(models.Model):
@@ -46,3 +47,17 @@ class Outbound(models.Model):
 
     def __str__(self):
         return self.reference
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ROLES = (
+        ('WM', 'Warehouse Manager'),
+        ('OP', 'Operator'),
+    )
+    role = models.CharField(max_length=2, choices=ROLES)
+
+    def user_permissions(self):
+        if self.role == 'WM':
+            return True
+        return False
+
