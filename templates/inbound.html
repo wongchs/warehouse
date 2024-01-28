@@ -2,6 +2,6 @@
 <h2>Inbound Product</h2>
 <form method="POST">
   {% csrf_token %} {{ inbound_form.as_p }}
-  <button type="submit">Submit</button>
+  <button type="submit" class="btn btn-success">Add</button>
 </form>
 {% endblock %}

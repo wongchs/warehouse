@@ -3,9 +3,9 @@
 <a href="{% url 'add_product' %}">Add Product</a>
 <form method="GET" action="">
   <input type="text" name="search" placeholder="Search products" />
-  <input type="submit" value="Search" />
+  <button type="submit" value="Search" class="btn btn-primary">Search</button>
 </form>
-<table>
+<table class="table table-bordered table-light">
   <tr>
     <th>SKU</th>
     <th>Name</th>
