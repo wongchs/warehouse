@@ -1,81 +1,100 @@
 {% extends 'index.html' %} {% block content %}
-<h1>Product List</h1>
-<a href="{% url 'add_product' %}">Add Product</a>
-<form method="GET" action="">
-  <input type="text" name="search" placeholder="Search products" />
-  <button type="submit" value="Search" class="btn btn-primary">Search</button>
-</form>
-<table class="table table-bordered table-light">
-  <tr>
-    <th>SKU</th>
-    <th>Name</th>
-    <th>Location</th>
-    <th>Quantity</th>
-    <th>Category</th>
-    <th>Supplier</th>
-  </tr>
-  {% for product in products %}
-  <tr>
-    <td>{{ product.sku }}</td>
-    <td>
-      <a href="{% url 'update_product' product.id %}">{{ product.name }}</a>
-    </td>
-    <td>{{ product.location }}</td>
-    <td>{{ product.quantity }}</td>
-    <td>{{ product.category.name }}</td>
-    <td>{{ product.supplier.name }}</td>
-  </tr>
-  {% endfor %}
-</table>
-<h2>Outbound Operations</h2>
-<a href="{% url 'outbound' %}">Go to Outbound Operations</a>
-<table class="table table-bordered">
-  <tr>
-    <th>Date Shipped</th>
-    <th>Reference</th>
-    <th>Product</th>
-    <th>SKU</th>
-    <th>Quantity</th>
-    <th>Destination</th>
-    <th>Remarks</th>
-  </tr>
-  {% for outbound in outbounds %}
-  <tr>
-    <td>{{ outbound.date_shipped }}</td>
-    <td>{{ outbound.reference }}</td>
-    <td>{{ outbound.product.name }}</td>
-    <td>{{ inbound.product.sku }}</td>
-    <td>{{ outbound.quantity }}</td>
-    <td>{{ outbound.destination }}</td>
-    <td>{{ outbound.remarks }}</td>
-  </tr>
-  {% endfor %}
-</table>
+<h1 class="my-4">Warehouse Manager Home</h1>
+<hr class="my-4" />
 
-<h2>Inbound Operations</h2>
-<a href="{% url 'inbound' %}">Go to Inbound Operations</a>
-<table class="table table-bordered">
-  <tr>
-    <th>Date Received</th>
-    <th>Reference</th>
-    <th>Product</th>
-    <th>SKU</th>
-    <th>Quantity</th>
-    <th>Supplier</th>
-    <th>Location</th>
-    <th>Remarks</th>
-  </tr>
-  {% for inbound in inbounds %}
-  <tr>
-    <td>{{ inbound.date_received }}</td>
-    <td>{{ inbound.reference }}</td>
-    <td>{{ inbound.product.name }}</td>
-    <td>{{ inbound.product.sku }}</td>
-    <td>{{ inbound.quantity }}</td>
-    <td>{{ inbound.supplier.name }}</td>
-    <td>{{ inbound.location }}</td>
-    <td>{{ inbound.remarks }}</td>
-  </tr>
-  {% endfor %}
-</table>
+<h2 class="my-2">Product List</h2>
+<a href="{% url 'add_product' %}" class="btn btn-success mb-3">Add Product</a>
+<form method="GET" action="" class="mb-2">
+  <div class="input-group">
+    <input
+      type="text"
+      name="search"
+      placeholder="Search products"
+      class="form-control"
+    />
+    <button type="submit" value="Search" class="btn btn-primary">Search</button>
+  </div>
+</form>
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-light">
+    <tr>
+      <th>SKU</th>
+      <th>Name</th>
+      <th>Location</th>
+      <th>Quantity</th>
+      <th>Category</th>
+      <th>Supplier</th>
+    </tr>
+    {% for product in products %}
+    <tr>
+      <td>{{ product.sku }}</td>
+      <td>
+        <a href="{% url 'update_product' product.id %}">{{ product.name }}</a>
+      </td>
+      <td>{{ product.location }}</td>
+      <td>{{ product.quantity }}</td>
+      <td>{{ product.category.name }}</td>
+      <td>{{ product.supplier.name }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+<hr class="my-4" />
+
+<h2 class="my-4">Outbounds</h2>
+<a href="{% url 'outbound' %}" class="btn btn-info mb-3">Outbound Operations</a>
+<div class="table-responsive">
+  <table class="table table-striped table-bordered">
+    <tr>
+      <th>Date Shipped</th>
+      <th>Reference</th>
+      <th>Product</th>
+      <th>SKU</th>
+      <th>Quantity</th>
+      <th>Destination</th>
+      <th>Remarks</th>
+    </tr>
+    {% for outbound in outbounds %}
+    <tr>
+      <td>{{ outbound.date_shipped }}</td>
+      <td>{{ outbound.reference }}</td>
+      <td>{{ outbound.product.name }}</td>
+      <td>{{ inbound.product.sku }}</td>
+      <td>{{ outbound.quantity }}</td>
+      <td>{{ outbound.destination }}</td>
+      <td>{{ outbound.remarks }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+<hr class="my-4" />
+
+<h2 class="my-4">Inbounds</h2>
+<a href="{% url 'inbound' %}" class="btn btn-info mb-3">Inbound Operations</a>
+<div class="table-responsive">
+  <table class="table table-striped table-bordered">
+    <tr>
+      <th>Date Received</th>
+      <th>Reference</th>
+      <th>Product</th>
+      <th>SKU</th>
+      <th>Quantity</th>
+      <th>Supplier</th>
+      <th>Location</th>
+      <th>Remarks</th>
+    </tr>
+    {% for inbound in inbounds %}
+    <tr>
+      <td>{{ inbound.date_received }}</td>
+      <td>{{ inbound.reference }}</td>
+      <td>{{ inbound.product.name }}</td>
+      <td>{{ inbound.product.sku }}</td>
+      <td>{{ inbound.quantity }}</td>
+      <td>{{ inbound.supplier.name }}</td>
+      <td>{{ inbound.location }}</td>
+      <td>{{ inbound.remarks }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
 {% endblock %}

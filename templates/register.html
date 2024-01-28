@@ -1,5 +1,7 @@
 {% extends 'index.html' %} {% block content %}
-<h2>Register</h2>
+<h2 class="my-4">Create User</h2>
+<hr class="my-4" />
+
 <form method="post">
   {% csrf_token %} {{ user_form.as_p }} {{ profile_form.as_p }}
   <button type="submit" class="btn btn-success">Register</button>

@@ -1,5 +1,7 @@
 {% extends 'index.html' %} {% block content %}
-<h2>Add Product</h2>
+<h2 class="my-4">Add Product</h2>
+<hr class="my-4" />
+
 <form method="post">
   {% csrf_token %} {{ product_form.as_p }}
   <button type="submit" class="btn btn-success">Add</button>
