@@ -3,18 +3,22 @@
 
 <h2>Outbound Operations</h2>
 <a href="{% url 'outbound' %}">Go to Outbound Operations</a>
-<table>
+<table class="table table-bordered">
   <tr>
+    <th>Date Shipped</th>
     <th>Reference</th>
     <th>Product</th>
+    <th>SKU</th>
     <th>Quantity</th>
     <th>Destination</th>
     <th>Remarks</th>
   </tr>
   {% for outbound in outbounds %}
   <tr>
+    <td>{{ outbound.date_shipped }}</td>
     <td>{{ outbound.reference }}</td>
     <td>{{ outbound.product.name }}</td>
+    <td>{{ inbound.product.sku }}</td>
     <td>{{ outbound.quantity }}</td>
     <td>{{ outbound.destination }}</td>
     <td>{{ outbound.remarks }}</td>
@@ -24,10 +28,12 @@
 
 <h2>Inbound Operations</h2>
 <a href="{% url 'inbound' %}">Go to Inbound Operations</a>
-<table>
+<table class="table table-bordered">
   <tr>
+    <th>Date Received</th>
     <th>Reference</th>
     <th>Product</th>
+    <th>SKU</th>
     <th>Quantity</th>
     <th>Supplier</th>
     <th>Location</th>
@@ -35,8 +41,10 @@
   </tr>
   {% for inbound in inbounds %}
   <tr>
+    <td>{{ inbound.date_received }}</td>
     <td>{{ inbound.reference }}</td>
     <td>{{ inbound.product.name }}</td>
+    <td>{{ inbound.product.sku }}</td>
     <td>{{ inbound.quantity }}</td>
     <td>{{ inbound.supplier.name }}</td>
     <td>{{ inbound.location }}</td>

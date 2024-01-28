@@ -11,6 +11,8 @@ from django.contrib.auth.forms import UserCreationForm
 @login_required
 def home(request):
     user_profile = UserProfile.objects.get(user=request.user)
+    outbounds = Outbound.objects.all()
+    inbounds = Inbound.objects.all()
     if user_profile.user_permissions():
         query = request.GET.get('search')
         products = Product.objects.all()
@@ -22,10 +24,8 @@ def home(request):
                 Q(category__name__icontains=query) |
                 Q(supplier__name__icontains=query)
             )
-        return render(request, 'home.html', {'products': products})
+        return render(request, 'home.html', {'products': products, 'outbounds': outbounds, 'inbounds': inbounds})
     else:
-        outbounds = Outbound.objects.all()
-        inbounds = Inbound.objects.all()
         return render(request, 'operator_home.html', {'outbounds': outbounds, 'inbounds': inbounds})
 
 
