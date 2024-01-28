@@ -5,6 +5,7 @@ from django import forms
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
 @login_required
@@ -123,3 +124,29 @@ class OutboundView(View):
         return render(request, 'outbound.html', {
             'outbound_form': outbound_form
         })
+        
+class UserForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        fields = UserCreationForm.Meta.fields + ('email',)
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('role',)
+        
+@login_required
+def register(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    if not user_profile.user_permissions():
+        return redirect('home')
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        profile_form = UserProfileForm(request.POST)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            UserProfile.objects.create(user=user, role=profile_form.cleaned_data['role'])
+            return redirect('home')
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+    return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
