@@ -1,0 +1,21 @@
+<header>
+  <nav>
+    <ul>
+      {% if user.is_authenticated %}
+      <li><a href="{% url 'home' %}">Home</a></li>
+      {% if request.user.userprofile.role == 'WM' %}
+      <li><a href="{% url 'add_product' %}">Inventory</a></li>
+      <li><a href="{% url 'inbound' %}">Inbound</a></li>
+      <li><a href="{% url 'outbound' %}">Outbound</a></li>
+      <li><a href="{% url 'register' %}">User Creation</a></li>
+      {% endif %}
+      <li>
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button type="submit">Logout</button>
+        </form>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+</header>
