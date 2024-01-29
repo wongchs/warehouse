@@ -140,6 +140,7 @@ class OutboundView(View):
                 })
             outbound.product.quantity -= outbound.quantity
             outbound.product.save()
+            outbound.save()
             return redirect('home')
         return render(request, 'outbound.html', {
             'outbound_form': outbound_form
