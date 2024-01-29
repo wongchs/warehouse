@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Product, Category, Supplier, Inbound, Outbound, UserProfile
+from .models import Product, Inbound, Outbound, UserProfile
 from django.views import View
-from django import forms
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
+from .forms import ProductForm, InboundForm, OutboundForm, UserForm, UserProfileForm, SupplierForm, CategoryForm
 
 # Create your views here.
 @login_required
@@ -27,20 +26,6 @@ def home(request):
         return render(request, 'home.html', {'products': products, 'outbounds': outbounds, 'inbounds': inbounds})
     else:
         return render(request, 'operator_home.html', {'outbounds': outbounds, 'inbounds': inbounds})
-
-
-class ProductForm(forms.ModelForm):
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    class Meta:
-        model = Product
-        fields = ['sku', 'name', 'location', 'quantity', 'category', 'supplier']
-        widgets = {
-            'sku': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter SKU'}),
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter product name'}),
-            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter location'}),
-            'quantity': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter quantity'}),
-        }
 
 class AddProductView(View):
     def get(self, request):
@@ -75,21 +60,6 @@ class UpdateProductView(View):
         return render(request, 'update_product.html', {
             'product_form': product_form
         })
-        
-class InboundForm(forms.ModelForm):
-    product = forms.ModelChoiceField(queryset=Product.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    class Meta:
-        model = Inbound
-        fields = ['reference', 'product', 'quantity', 'supplier', 'location', 'remarks']
-        widgets = {
-            'reference': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter reference'}),
-            'product': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter product name'}),
-            'quantity': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter quantity'}),
-            'supplier': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter supplier'}),
-            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter location'}),
-            'remarks': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter remarks'}),
-        }
 
 class InboundView(View):
     def get(self, request):
@@ -108,19 +78,6 @@ class InboundView(View):
         return render(request, 'inbound.html', {
             'inbound_form': inbound_form
         })
-
-class OutboundForm(forms.ModelForm):
-    product = forms.ModelChoiceField(queryset=Product.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    class Meta:
-        model = Outbound
-        fields = ['reference', 'product', 'quantity', 'destination', 'remarks']
-        widgets = {
-            'reference': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter reference'}),
-            'product': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter product name'}),
-            'quantity': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter quantity'}),
-            'destination': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter destination'}),
-            'remarks': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter remarks'}),
-        }
 
 class OutboundView(View):
     def get(self, request):
@@ -146,26 +103,6 @@ class OutboundView(View):
             'outbound_form': outbound_form
         })
         
-class UserForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        fields = UserCreationForm.Meta.fields + ('email',)
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter username'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter email'}),
-        }
-    def __init__(self, *args, **kwargs):
-        super(UserForm, self).__init__(*args, **kwargs)
-        self.fields['password1'].widget = forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter password'})
-        self.fields['password2'].widget = forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm password'})
-
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = UserProfile
-        fields = ('role',)
-        widgets = {
-            'role': forms.Select(attrs={'class': 'form-control'}),
-        }
-        
 @login_required
 def register(request):
     user_profile = UserProfile.objects.get(user=request.user)
@@ -182,22 +119,6 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileForm()
     return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
-
-class SupplierForm(forms.ModelForm):
-    class Meta:
-        model = Supplier
-        fields = ['name']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter supplier name'}),
-        }
-
-class CategoryForm(forms.ModelForm):
-    class Meta:
-        model = Category
-        fields = ['name']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category name'}),
-        }
 
 class AddSupplierView(View):
     def get(self, request):
