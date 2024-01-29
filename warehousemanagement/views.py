@@ -182,3 +182,51 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileForm()
     return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
+
+class SupplierForm(forms.ModelForm):
+    class Meta:
+        model = Supplier
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter supplier name'}),
+        }
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category name'}),
+        }
+
+class AddSupplierView(View):
+    def get(self, request):
+        supplier_form = SupplierForm()
+        return render(request, 'add_supplier.html', {
+            'supplier_form': supplier_form
+        })
+
+    def post(self, request):
+        supplier_form = SupplierForm(request.POST)
+        if supplier_form.is_valid():
+            supplier_form.save()
+            return redirect('home')
+        return render(request, 'add_supplier.html', {
+            'supplier_form': supplier_form
+        })
+
+class AddCategoryView(View):
+    def get(self, request):
+        category_form = CategoryForm()
+        return render(request, 'add_category.html', {
+            'category_form': category_form
+        })
+
+    def post(self, request):
+        category_form = CategoryForm(request.POST)
+        if category_form.is_valid():
+            category_form.save()
+            return redirect('home')
+        return render(request, 'add_category.html', {
+            'category_form': category_form
+        })
