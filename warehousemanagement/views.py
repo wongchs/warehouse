@@ -132,7 +132,12 @@ class OutboundView(View):
     def post(self, request):
         outbound_form = OutboundForm(request.POST)
         if outbound_form.is_valid():
-            outbound = outbound_form.save()
+            outbound = outbound_form.save(commit=False)
+            if outbound.quantity > outbound.product.quantity:
+                outbound_form.add_error('quantity', 'Quantity cannot exceed inventory')
+                return render(request, 'outbound.html', {
+                    'outbound_form': outbound_form
+                })
             outbound.product.quantity -= outbound.quantity
             outbound.product.save()
             return redirect('home')
