@@ -35,3 +35,4 @@ python manage.py runserver
 ```
 7. Open your web browser and navigate to `http://127.0.0.1:8000/admin`.
 8. Assign Warehouse manager role to superuser in the UserProfile table through the admin panel.
+9. Navigate to `http://127.0.0.1:8000/` to access the system interface.
